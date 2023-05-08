@@ -79,7 +79,7 @@ function validatePeopleIsANumber(req, res, next) {
   } else {
     return next({
       status: 400,
-      message: `people must be a number`,
+      message: `People must be a number`,
     });
   }
 }
@@ -88,12 +88,25 @@ function validatePeopleIsANumber(req, res, next) {
 function validateDateIsDate(req, res, next) {
   const { reservation_date } = req.body.data;
   const date = Date.parse(reservation_date);
-  if (date && date > 0) {
+  const newDay = new Date();
+  const dayOfTheWeek = new Date(date);
+  console.log(dayOfTheWeek.getDay());
+  if (date < newDay) {
+    return next({
+      status: 400,
+      message: `The reservation date is in the past. Only future reservations are allowed.`,
+    });
+  } else if (dayOfTheWeek.getDay() == 1) {
+    return next({
+      status: 400,
+      message: `The reservation date is a Tuesday as the restaurant is closed on Tuesdays.`,
+    });
+  } else if (date && date > 0) {
     return next();
   } else {
     return next({
       status: 400,
-      message: `reservation_date must be a date`,
+      message: `Reservation date must be a date`,
     });
   }
 }
@@ -105,19 +118,19 @@ function validateTimeIsTime(req, res, next) {
   if (reservation_time == null) {
     return next({
       status: 400,
-      message: `reservation_time must be a time`,
+      message: `Reservation time must be a time`,
     });
   } else if (timeRegex.test(reservation_time) == true) {
     return next();
   } else {
     return next({
       status: 400,
-      message: `reservation_time must be a time`,
+      message: `Reservation time must be a time`,
     });
   }
 }
 
-// // validate that a movie exists
+// // validate that a resevration exists
 // async function reservationExists(req, res, next) {
 //   const reservation = await reservationsService.read(req.params.reservation_id);
 //   if (reservation) {

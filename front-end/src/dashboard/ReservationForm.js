@@ -6,10 +6,10 @@ function ReservationForm({
   submitLabel,
   cancelLabel,
   initialState,
+  error,
 }) {
   const [reservationData, setReservationData] = useState(initialState);
   // console.log(initialState)
-  // const history = useHistory();
 
   const handleReservationUpdate = (event) => {
     if (event.target.name === "people") {
@@ -25,14 +25,16 @@ function ReservationForm({
     }
   };
 
-  useEffect(() => {
-    setReservationData(initialState);
-  }, [initialState]);
+  //   useEffect(() => {
+  //     setReservationData(initialState);
+  //   }, [initialState]);
 
   const onSubmit = (event) => {
     event.preventDefault();
     handleSubmit(reservationData);
-    setReservationData({ ...initialState });
+    if (!error) {
+      setReservationData({ ...initialState });
+    }
   };
 
   return (
