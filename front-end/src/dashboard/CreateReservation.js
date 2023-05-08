@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import ReservationForm from "./ReservationForm";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
+import ErrorAlert from "../layout/ErrorAlert";
 
 function CreateReservation() {
   const initialState = {
@@ -13,7 +14,7 @@ function CreateReservation() {
     people: "",
   };
 
-  //   const [formData, setFormData] = useState({ ...initialState });
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const history = useHistory();
 
@@ -22,29 +23,21 @@ function CreateReservation() {
   //     return history.goBack;
   //   };
 
-  const handleSubmit = async (newRevseration) => {
-    const createdReservation = await createReservation(newRevseration);
-    history.push(`/dashboard?date=${createdReservation.reservation_date}`);
+  const handleSubmit = async (newReservation) => {
+    const abortController = new AbortController();
+    try {
+      const createdReservation = await createReservation(newReservation);
+      history.push(`/dashboard?date=${createdReservation.reservation_date}`);
+    } catch (error) {
+      setErrorMessage(error);
+    }
+    return abortController;
   };
-
-  //   const handleSubmit = (event) => {
-  //     // event.preventDefault();
-  //     const createdReservation = { ...initialState };
-  //     async function createRes() {
-  //       try {
-  //         const finishedReservation = await createReservation(createdReservation);
-  //         history.push(`/${finishedReservation}`);
-  //       } catch (error) {
-  //         throw error;
-  //       }
-  //     }
-  //     createRes();
-  //     console.log("submitted", initialState);
-  //   };
 
   return (
     <div>
       <h2>Create Reservation</h2>
+      <ErrorAlert error={errorMessage} />
 
       <ReservationForm
         handleSubmit={handleSubmit}
@@ -52,6 +45,7 @@ function CreateReservation() {
         submitLabel="Submit"
         cancelLabel="Cancel"
         initialState={initialState}
+        error={errorMessage}
       />
     </div>
   );
