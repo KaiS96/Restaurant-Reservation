@@ -61,15 +61,21 @@ async function list(req, res) {
   res.json({ data });
 }
 
-// async function read(req, res) {
-//   res.status(200).json({ data: res.locals.reservation });
-// }
-
 // create a reservation
 async function create(req, res, next) {
   const data = await reservationsService.create(req.body.data);
   res.status(201).json({ data });
 }
+
+// // validate that a reservation exists
+// async function reservationExists(req, res, next) {
+//   const reservation = await reservationsService.read(req.params.reservation_id);
+//   if (reservation) {
+//     res.locals.reservation = reservation;
+//     return next();
+//   }
+//   next({ status: 404, message: `reservation cannot be found.` });
+// }
 
 // validate whether people is a number
 function validatePeopleIsANumber(req, res, next) {
@@ -79,7 +85,7 @@ function validatePeopleIsANumber(req, res, next) {
   } else {
     return next({
       status: 400,
-      message: `People must be a number`,
+      message: `people must be a number`,
     });
   }
 }
@@ -90,68 +96,69 @@ function validateDateIsDate(req, res, next) {
   const date = Date.parse(reservation_date);
   const newDay = new Date();
   const dayOfTheWeek = new Date(date);
-  console.log(dayOfTheWeek.getDay());
-  if (date < newDay) {
+  // console.log(dayOfTheWeek.getUTCDay(date));
+  if (dayOfTheWeek.getUTCDay() == 2) {
     return next({
       status: 400,
-      message: `The reservation date is in the past. Only future reservations are allowed.`,
-    });
-  } else if (dayOfTheWeek.getDay() == 1) {
-    return next({
-      status: 400,
-      message: `The reservation date is a Tuesday as the restaurant is closed on Tuesdays.`,
+      message: `The reservation_date is a Tuesday as the restaurant is closed on Tuesdays.`,
     });
   } else if (date && date > 0) {
     return next();
   } else {
     return next({
       status: 400,
-      message: `Reservation date must be a date`,
+      message: `reservation_date must be a date`,
     });
   }
 }
 
 // validate whether reservation_time is a time
 function validateTimeIsTime(req, res, next) {
-  let timeRegex = new RegExp(/^([01]\d|2[0-3]):?([0-5]\d)$/);
+  let timeRegex = new RegExp(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
   const { reservation_time } = req.body.data;
-  if (reservation_time == null) {
+  const currentTime = new Date().toLocaleTimeString();
+  // console.log(currentTime);
+  console.log(reservation_time);
+  if (reservation_time < "10:30") {
     return next({
       status: 400,
-      message: `Reservation time must be a time`,
+      message: `reservation_time must be after 10:30 am`,
+    });
+  } else if (reservation_time > "21:30") {
+    return next({
+      status: 400,
+      message: `reservation_time must be before 9:30 pm`,
     });
   } else if (timeRegex.test(reservation_time) == true) {
     return next();
   } else {
     return next({
       status: 400,
-      message: `Reservation time must be a time`,
+      message: `reservation_time must be a time`,
     });
   }
 }
 
-// // validate that a resevration exists
-// async function reservationExists(req, res, next) {
-//   const reservation = await reservationsService.read(req.params.reservation_id);
-//   if (reservation) {
-//     res.locals.reservation = reservation;
-//     return next();
-//   }
-//   next({
-//     status: 404,
-//     message: `Reservation: ${req.params.reservation_id} cannot be found.`,
-//   });
-// }
+function validatorDateIsNotInThePast(req, res, next) {
+  const { reservation_date, reservation_time } = req.body.data;
+  let day = new Date(`${reservation_date} ${reservation_time}`);
+  if (day < Date.now()) {
+    return next({
+      status: 400,
+      message: `The reservation_date is in the past. Only future reservations are allowed.`,
+    });
+  }
+  return next();
+}
 
 module.exports = {
-  // read: [reservationExists, asyncErrorBoundary(read)],
   list: asyncErrorBoundary(list),
   create: [
-    //reservationExists,
     hasData,
     hasOnlyValidProperties,
     hasRequiredProperties,
     validatePeopleIsANumber,
+    validatorDateIsNotInThePast,
     validateDateIsDate,
     validateTimeIsTime,
     asyncErrorBoundary(create),

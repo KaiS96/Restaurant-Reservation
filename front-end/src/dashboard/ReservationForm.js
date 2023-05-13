@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 function ReservationForm({
   onCancel,
@@ -24,10 +24,6 @@ function ReservationForm({
       });
     }
   };
-
-  //   useEffect(() => {
-  //     setReservationData(initialState);
-  //   }, [initialState]);
 
   const onSubmit = (event) => {
     event.preventDefault();
