@@ -4,16 +4,16 @@ import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
-function CreateReservation() {
-  const initialState = {
-    first_name: "",
-    last_name: "",
-    mobile_number: "",
-    reservation_date: "",
-    reservation_time: "",
-    people: "",
-  };
+const initialState = {
+  first_name: "",
+  last_name: "",
+  mobile_number: "",
+  reservation_date: "",
+  reservation_time: "",
+  people: "",
+};
 
+function CreateReservation() {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const history = useHistory();
