@@ -44,7 +44,7 @@ function TableForm({
             id="table_name"
             type="text"
             required={true}
-            // value={tableData.table_name}
+            value={tableData.table_name}
             placeholder="Table Name"
             onChange={handleTableUpdate}
           />
@@ -58,7 +58,7 @@ function TableForm({
             id="capacity"
             type="number"
             required={true}
-            // value={tableData.capacity}
+            value={tableData.capacity}
             placeholder="Capacity"
             onChange={handleTableUpdate}
           />

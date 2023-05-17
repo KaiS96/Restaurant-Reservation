@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { listReservations, listTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-
 import ReservationList from "../Reservations/ReservationList";
 import TableList from "../Tables/TableList";
 
@@ -42,7 +41,11 @@ function Dashboard({ date }) {
       </div>
       <ErrorAlert error={reservationsError} />
       <ReservationList reservations={reservations} />
-      <TableList tables={tables} />
+      <TableList
+        tables={tables}
+        loadDashboard={loadDashboard}
+        loadTables={loadTables}
+      />
     </main>
   );
 }

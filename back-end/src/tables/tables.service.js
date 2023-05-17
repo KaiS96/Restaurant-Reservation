@@ -23,9 +23,17 @@ function read(table_id) {
   return knex("tables").select("*").where({ table_id }).first();
 }
 
+function destroy(table_id) {
+  return knex("tables")
+    .update({ reservation_id: null }, "*")
+    .where({ table_id })
+    .then((table) => table[0]);
+}
+
 module.exports = {
   create,
   list,
   update,
   read,
+  delete: destroy,
 };

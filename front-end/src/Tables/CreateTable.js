@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ErrorAlert from "../layout/ErrorAlert";
 import TableForm from "./TableForm";
 import { createTable } from "../utils/api";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory } from "react-router-dom";
 
 const initialState = {
   table_name: "",
@@ -32,7 +32,7 @@ function CreateTable() {
 
   return (
     <div>
-      <h2>Create Reservation</h2>
+      <h2>Create a Table</h2>
       <ErrorAlert error={errorMessage} />
 
       <TableForm

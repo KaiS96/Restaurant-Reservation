@@ -5,7 +5,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
 const hasRequiredProperties = hasProperties("table_name", "capacity");
 
-const VALID_PROPERTIES = ["table_name", "capacity"];
+const VALID_PROPERTIES = ["table_name", "capacity", "reservation_id"];
 
 async function list(req, res, next) {
   const data = await tablesService.list();
@@ -29,6 +29,27 @@ async function update(req, res) {
 // read a table
 async function read(req, res, next) {
   res.status(200).json({ data: res.locals.table });
+}
+
+// delete a table
+async function destroy(req, res, next) {
+  const { table } = res.locals;
+  await tablesService.delete(table.table_id);
+  res.sendStatus(204);
+}
+
+// validate if table is oppcupied
+function validateIfTableIsOccupied(req, res, next) {
+  const { table_id } = req.params;
+  const { table } = res.locals;
+  if (table.reservation_id == null) {
+    return next({
+      status: 400,
+      message: `${table_id} is not occupied`,
+    });
+  } else {
+    return next();
+  }
 }
 
 // validate whether the input has valid properties
@@ -64,7 +85,10 @@ async function tableExists(req, res, next) {
     res.locals.table = table;
     return next();
   }
-  next({ status: 404, message: `table cannot be found.` });
+  next({
+    status: 404,
+    message: `table ${req.params.table_id} cannot be found.`,
+  });
 }
 
 // validate whether capacity is a number
@@ -131,7 +155,7 @@ function validateTableAvailability(req, res, next) {
   if (reservation !== null) {
     next({
       status: 400,
-      message: `table is occupied.`,
+      message: `table ${res.locals.table.table_id} is occupied.`,
     });
   }
   next();
@@ -155,5 +179,10 @@ module.exports = {
     validateTableCapacity,
     validateTableAvailability,
     asyncErrorBoundary(update),
+  ],
+  delete: [
+    asyncErrorBoundary(tableExists),
+    asyncErrorBoundary(validateIfTableIsOccupied),
+    asyncErrorBoundary(destroy),
   ],
 };
