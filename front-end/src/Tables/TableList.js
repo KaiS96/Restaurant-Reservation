@@ -1,15 +1,15 @@
 import React from "react";
 import { finishReservation } from "../utils/api";
 
-function TableList({ tables, loadDashboard }) {
-  const handleFinishReservation = async (table_id) => {
-    if (
-      window.confirm(
-        "Is this table ready to seat new guests?\n\n This cannot be undone."
-      )
-    ) {
-      await finishReservation(table_id);
+function TableList({ tables, loadDashboard, loadTables }) {
+  const handleFinishReservation = async (table_id, reservation_id) => {
+    const confirm = window.confirm(
+      "Is this table ready to seat new guests?\nThis cannot be undone."
+    );
+    if (confirm) {
+      await finishReservation(table_id, reservation_id);
       loadDashboard();
+      loadTables();
     }
   };
 
@@ -37,7 +37,12 @@ function TableList({ tables, loadDashboard }) {
                 <td>
                   <button
                     data-table-id-finish={table.table_id}
-                    onClick={() => handleFinishReservation(table.table_id)}
+                    onClick={() =>
+                      handleFinishReservation(
+                        table.table_id,
+                        table.reservation_id
+                      )
+                    }
                   >
                     Finish
                   </button>

@@ -5,7 +5,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const hasProperties = require("../errors/hasProperties");
 const hasRequiredProperties = hasProperties("table_name", "capacity");
 
-const VALID_PROPERTIES = ["table_name", "capacity"];
+const VALID_PROPERTIES = ["table_name", "capacity", "reservation_id"];
 
 async function list(req, res, next) {
   const data = await tablesService.list();
@@ -35,7 +35,7 @@ async function read(req, res, next) {
 async function destroy(req, res, next) {
   const { table } = res.locals;
   await tablesService.delete(table.table_id);
-  res.sendStatus(200);
+  res.sendStatus(204);
 }
 
 // validate if table is oppcupied
@@ -105,7 +105,7 @@ function validateCapacityIsANumber(req, res, next) {
 }
 
 // validate is more than two characters
-function validateTableNameIsNotOneCharacter(req, res, next) {
+function valiteTableNameIsNotOneCharacter(req, res, next) {
   const { table_name } = req.body.data;
   const table = String(table_name);
   if (table.length < 2) {
@@ -164,20 +164,20 @@ function validateTableAvailability(req, res, next) {
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
-    asyncErrorBoundary(hasData),
-    asyncErrorBoundary(hasOnlyValidProperties),
-    asyncErrorBoundary(hasRequiredProperties),
-    asyncErrorBoundary(validateCapacityIsANumber),
-    asyncErrorBoundary(validateTableNameIsNotOneCharacter),
+    hasData,
+    hasOnlyValidProperties,
+    hasRequiredProperties,
+    validateCapacityIsANumber,
+    valiteTableNameIsNotOneCharacter,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(tableExists), asyncErrorBoundary(read)],
   update: [
     asyncErrorBoundary(tableExists),
-    asyncErrorBoundary(hasData),
+    hasData,
     asyncErrorBoundary(validateReservationIdExists),
-    asyncErrorBoundary(validateTableCapacity),
-    asyncErrorBoundary(validateTableAvailability),
+    validateTableCapacity,
+    validateTableAvailability,
     asyncErrorBoundary(update),
   ],
   delete: [
