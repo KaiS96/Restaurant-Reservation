@@ -31,6 +31,27 @@ async function read(req, res, next) {
   res.status(200).json({ data: res.locals.table });
 }
 
+// delete a table
+async function destroy(req, res, next) {
+  const { table } = res.locals;
+  await tablesService.delete(table.table_id);
+  res.sendStatus(200);
+}
+
+// validate if table is oppcupied
+function validateIfTableIsOccupied(req, res, next) {
+  const { table_id } = req.params;
+  const { table } = res.locals;
+  if (table.reservation_id == null) {
+    return next({
+      status: 400,
+      message: `${table_id} is not occupied`,
+    });
+  } else {
+    return next();
+  }
+}
+
 // validate whether the input has valid properties
 function hasOnlyValidProperties(req, res, next) {
   const { data = {} } = req.body;
@@ -64,7 +85,10 @@ async function tableExists(req, res, next) {
     res.locals.table = table;
     return next();
   }
-  next({ status: 404, message: `table cannot be found.` });
+  next({
+    status: 404,
+    message: `table ${req.params.table_id} cannot be found.`,
+  });
 }
 
 // validate whether capacity is a number
@@ -81,7 +105,7 @@ function validateCapacityIsANumber(req, res, next) {
 }
 
 // validate is more than two characters
-function valiteTableNameIsNotOneCharacter(req, res, next) {
+function validateTableNameIsNotOneCharacter(req, res, next) {
   const { table_name } = req.body.data;
   const table = String(table_name);
   if (table.length < 2) {
@@ -131,7 +155,7 @@ function validateTableAvailability(req, res, next) {
   if (reservation !== null) {
     next({
       status: 400,
-      message: `table is occupied.`,
+      message: `table ${res.locals.table.table_id} is occupied.`,
     });
   }
   next();
@@ -140,20 +164,25 @@ function validateTableAvailability(req, res, next) {
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
-    hasData,
-    hasOnlyValidProperties,
-    hasRequiredProperties,
-    validateCapacityIsANumber,
-    valiteTableNameIsNotOneCharacter,
+    asyncErrorBoundary(hasData),
+    asyncErrorBoundary(hasOnlyValidProperties),
+    asyncErrorBoundary(hasRequiredProperties),
+    asyncErrorBoundary(validateCapacityIsANumber),
+    asyncErrorBoundary(validateTableNameIsNotOneCharacter),
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(tableExists), asyncErrorBoundary(read)],
   update: [
     asyncErrorBoundary(tableExists),
-    hasData,
+    asyncErrorBoundary(hasData),
     asyncErrorBoundary(validateReservationIdExists),
-    validateTableCapacity,
-    validateTableAvailability,
+    asyncErrorBoundary(validateTableCapacity),
+    asyncErrorBoundary(validateTableAvailability),
     asyncErrorBoundary(update),
+  ],
+  delete: [
+    asyncErrorBoundary(tableExists),
+    asyncErrorBoundary(validateIfTableIsOccupied),
+    asyncErrorBoundary(destroy),
   ],
 };
