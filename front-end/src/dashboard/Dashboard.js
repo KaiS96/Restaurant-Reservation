@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { finishReservation, listReservations, listTable } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
 import ReservationList from "../Reservations/ReservationList";
 import TableList from "../Tables/TableList";
+
+import ErrorAlert from "../layout/ErrorAlert";
+import { finishReservation, listReservations, listTable } from "../utils/api";
+import { next, previous, today } from "../utils/date-time";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 /**
@@ -15,7 +17,6 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [tablesError, setTablesError] = useState(null);
 
   const history = useHistory();
 
@@ -54,6 +55,16 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   };
 
+  function previousDay(date) {
+    const previousDate = previous(date);
+    history.push(`/dashboard?date=${previousDate}`);
+  }
+
+  function nextDay(date) {
+    const nextDate = next(date);
+    history.push(`/dashboard?date=${nextDate}`);
+  }
+
   return (
     <main>
       <h1>Dashboard</h1>
@@ -61,6 +72,29 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservations for date</h4>
       </div>
       <ErrorAlert error={reservationsError} />
+      <div>
+        <button
+          type="button"
+          className="btn btn-primary m-2"
+          onClick={() => previousDay(date)}
+        >
+          Previous Day
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary m-2"
+          onClick={() => history.push(`/dashboard?date=${today()}`)}
+        >
+          Today
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary m-2"
+          onClick={() => nextDay(date)}
+        >
+          Next Day
+        </button>
+      </div>
       <ReservationList reservations={reservations} />
       <TableList
         tables={tables}

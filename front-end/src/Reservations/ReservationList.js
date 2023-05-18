@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
 function ReservationList({ reservations }) {
-  const [clickSeatButton, setClickSeatButton] = useState(false);
-
   return (
     <div>
       <table className="table">
