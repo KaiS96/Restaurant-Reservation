@@ -6,6 +6,7 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { finishReservation, listReservations, listTable } from "../utils/api";
 import { next, previous, today } from "../utils/date-time";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+// import SearchReservation from "../Reservations/SearchReservation";
 
 /**
  * Defines the dashboard page.
@@ -100,6 +101,7 @@ function Dashboard({ date }) {
         tables={tables}
         handleFinishReservation={handleFinishReservation}
       />
+      {/* <SearchReservation listReservations={listReservations} /> */}
     </main>
   );
 }

@@ -1,6 +1,29 @@
 import React from "react";
 
 function ReservationList({ reservations }) {
+  const reservationsMap = reservations.map((reservation, index) => (
+    <tr key={index}>
+      <td>{reservation.first_name}</td>
+      <td>{reservation.last_name}</td>
+      <td>{reservation.mobile_number}</td>
+      <td>{reservation.reservation_date}</td>
+      <td>{reservation.reservation_time}</td>
+      <td>{reservation.people}</td>
+      <td data-reservation-id-status={reservation.reservation_id}>
+        {reservation.status}
+      </td>
+      {reservation.status === "booked" ? (
+        <td>
+          <button type="button" className="btn btn-outline-secondary">
+            <a href={`/reservations/${reservation.reservation_id}/seat`}>
+              Seat
+            </a>
+          </button>
+        </td>
+      ) : null}
+    </tr>
+  ));
+
   return (
     <div>
       <table className="table">
@@ -16,32 +39,7 @@ function ReservationList({ reservations }) {
           </tr>
         </thead>
 
-        {reservations.map((reservation, index) => (
-          <tbody className="table-group-divider">
-            <tr key={index}>
-              <td>{reservation.first_name}</td>
-              <td>{reservation.last_name}</td>
-              <td>{reservation.mobile_number}</td>
-              <td>{reservation.reservation_date}</td>
-              <td>{reservation.reservation_time}</td>
-              <td>{reservation.people}</td>
-              <td data-reservation-id-status={reservation.reservation_id}>
-                {reservation.status}
-              </td>
-              {reservation.status === "booked" ? (
-                <td>
-                  <button>
-                    <a
-                      href={`/reservations/${reservation.reservation_id}/seat`}
-                    >
-                      Seat
-                    </a>
-                  </button>
-                </td>
-              ) : null}
-            </tr>
-          </tbody>
-        ))}
+        <tbody className="table-group-divider">{reservationsMap}</tbody>
       </table>
     </div>
   );

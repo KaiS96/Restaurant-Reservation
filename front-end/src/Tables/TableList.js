@@ -1,6 +1,28 @@
 import React from "react";
 
 function TableList({ tables, handleFinishReservation }) {
+  const tablesMap = tables.map((table, index) => (
+    <tr key={index}>
+      <td>{table.table_name}</td>
+      <td>{table.capacity}</td>
+      <td data-table-id-status={table.table_id}>
+        {table.reservation_id !== null ? "Occupied" : "Free"}
+      </td>
+      {table.reservation_id !== null ? (
+        <td>
+          <button
+            data-table-id-finish={table.table_id}
+            onClick={() =>
+              handleFinishReservation(table.table_id, table.reservation_id)
+            }
+          >
+            Finish
+          </button>
+        </td>
+      ) : null}
+    </tr>
+  ));
+
   return (
     <div>
       <table className="table">
@@ -13,32 +35,7 @@ function TableList({ tables, handleFinishReservation }) {
           </tr>
         </thead>
 
-        {tables.map((table, index) => (
-          <tbody className="table-group-divider">
-            <tr key={index}>
-              <td>{table.table_name}</td>
-              <td>{table.capacity}</td>
-              <td data-table-id-status={table.table_id}>
-                {table.reservation_id !== null ? "Occupied" : "Free"}
-              </td>
-              {table.reservation_id !== null ? (
-                <td>
-                  <button
-                    data-table-id-finish={table.table_id}
-                    onClick={() =>
-                      handleFinishReservation(
-                        table.table_id,
-                        table.reservation_id
-                      )
-                    }
-                  >
-                    Finish
-                  </button>
-                </td>
-              ) : null}
-            </tr>
-          </tbody>
-        ))}
+        <tbody className="table-group-divider">{tablesMap}</tbody>
       </table>
     </div>
   );
