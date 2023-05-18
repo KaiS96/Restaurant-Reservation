@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { setDefaultOptions } = require('expect-puppeteer');
+const { setDefaultOptions } = require("expect-puppeteer");
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -54,18 +54,21 @@ describe("US-06 - Reservation status - E2E", () => {
       });
       await page.reload({ waitUntil: "networkidle0" });
     });
+    console.log("1");
 
     test("/dashboard displays status", async () => {
       await page.screenshot({
         path: ".screenshots/us-06-dashboard-displays-status.png",
         fullPage: true,
       });
+      console.log("2");
 
       const containsBooked = await containsText(
         page,
         `[data-reservation-id-status="${reservation.reservation_id}"]`,
         "booked"
       );
+      console.log("3");
 
       expect(containsBooked).toBe(true);
     });

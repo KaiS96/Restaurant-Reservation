@@ -21,6 +21,7 @@ const VALID_PROPERTIES = [
   "reservation_date",
   "reservation_time",
   "people",
+  "status",
 ];
 
 // list reservations
@@ -29,8 +30,6 @@ async function list(req, res) {
   let data;
   if (date) {
     data = await reservationsService.listReservationsByDate(date);
-  } else {
-    data = await reservationsService.list(date);
   }
   res.json({ data });
 }
@@ -44,6 +43,16 @@ async function create(req, res, next) {
 // read a reservation
 async function read(req, res, next) {
   res.status(200).json({ data: res.locals.reservation });
+}
+
+// update a reservation
+async function update(req, res, next) {
+  const updatedReservation = {
+    ...req.body.data,
+    reservation_id: res.locals.reservation.reservation_id,
+  };
+  const data = await reservationsService.updateStatus(updatedReservation);
+  res.json({ data });
 }
 
 // validate whether the input has valid properties
@@ -144,7 +153,8 @@ function validateTimeIsTime(req, res, next) {
   }
 }
 
-function validatorDateIsNotInThePast(req, res, next) {
+// validate date is a future date
+function validateDateIsNotInThePast(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   let day = new Date(`${reservation_date} ${reservation_time}`);
   if (day < Date.now()) {
@@ -153,7 +163,50 @@ function validatorDateIsNotInThePast(req, res, next) {
       message: `The reservation_date is in the past. Only future reservations are allowed.`,
     });
   }
+  next();
+}
+
+// validate reservation status is booked when created
+function validateBookedReservation(req, res, next) {
+  const { status } = req.body.data;
+  if (status) {
+    if (status == "seated" || status == "finished") {
+      return next({
+        status: 400,
+        message: "Cannot create seated or finished reservation.",
+      });
+    }
+    if (status == "booked") {
+      return next();
+    }
+  }
   return next();
+}
+
+// validate reservation status
+function validateStatus(req, res, next) {
+  const { status } = req.body.data;
+  const validStatus = ["booked", "seated", "finished"];
+  if (!validStatus.includes(status)) {
+    return next({
+      status: 400,
+      message: `Status cannot be unknown`,
+    });
+  }
+  res.locals.status = status;
+  next();
+}
+
+// validate if reservation is finished -- cannot update
+function validateFinishedReservation(req, res, next) {
+  const { reservation } = res.locals;
+  if (reservation.status === "finished") {
+    return next({
+      status: 400,
+      message: `Status is currently finished`,
+    });
+  }
+  next();
 }
 
 module.exports = {
@@ -163,10 +216,17 @@ module.exports = {
     hasOnlyValidProperties,
     hasRequiredProperties,
     validatePeopleIsANumber,
-    validatorDateIsNotInThePast,
+    validateDateIsNotInThePast,
     validateDateIsDate,
     validateTimeIsTime,
+    validateBookedReservation,
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(read)],
+  update: [
+    asyncErrorBoundary(reservationExists),
+    validateStatus,
+    validateFinishedReservation,
+    asyncErrorBoundary(update),
+  ],
 };
