@@ -27,9 +27,14 @@ const VALID_PROPERTIES = [
 // list reservations
 async function list(req, res) {
   const { date } = req.query;
+  const { mobile_number } = req.query;
   let data;
   if (date) {
     data = await reservationsService.listReservationsByDate(date);
+  }
+
+  if (mobile_number) {
+    data = await reservationsService.search(mobile_number);
   }
   res.json({ data });
 }
