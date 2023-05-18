@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTable } from "../utils/api";
+import { finishReservation, listReservations, listTable } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationList from "../Reservations/ReservationList";
 import TableList from "../Tables/TableList";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 /**
  * Defines the dashboard page.
@@ -14,6 +15,9 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [tablesError, setTablesError] = useState(null);
+
+  const history = useHistory();
 
   useEffect(loadDashboard, [date]);
 
@@ -33,6 +37,23 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
+  const handleFinishReservation = async (table_id) => {
+    const abortController = new AbortController();
+    const confirm = window.confirm(
+      "Is this table ready to seat new guests?\nThis cannot be undone."
+    );
+    if (confirm) {
+      try {
+        await finishReservation(table_id, abortController.signal);
+        loadDashboard();
+        loadTables();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    return () => abortController.abort();
+  };
+
   return (
     <main>
       <h1>Dashboard</h1>
@@ -43,8 +64,7 @@ function Dashboard({ date }) {
       <ReservationList reservations={reservations} />
       <TableList
         tables={tables}
-        loadDashboard={loadDashboard}
-        loadTables={loadTables}
+        handleFinishReservation={handleFinishReservation}
       />
     </main>
   );

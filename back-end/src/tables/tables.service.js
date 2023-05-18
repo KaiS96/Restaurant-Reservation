@@ -23,11 +23,17 @@ function read(table_id) {
   return knex("tables").select("*").where({ table_id }).first();
 }
 
-function destroy(table_id) {
-  return knex("tables")
-    .update({ reservation_id: null }, "*")
-    .where({ table_id })
-    .then((table) => table[0]);
+function destroy(table_id, reservation_id) {
+  return knex.transaction(function (trx) {
+    return trx("tables")
+      .where({ table_id: table_id })
+      .update({ reservation_id: null })
+      .then(() => {
+        return trx("reservations")
+          .where({ reservation_id })
+          .update({ status: "finished" });
+      });
+  });
 }
 
 module.exports = {

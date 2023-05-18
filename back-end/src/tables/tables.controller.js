@@ -7,23 +7,34 @@ const hasRequiredProperties = hasProperties("table_name", "capacity");
 
 const VALID_PROPERTIES = ["table_name", "capacity", "reservation_id"];
 
+// list table/s
 async function list(req, res, next) {
   const data = await tablesService.list();
   res.status(200).json({ data });
 }
 
+// create a table
 async function create(req, res, next) {
   const data = await tablesService.create(req.body.data);
   res.status(201).json({ data });
 }
 
+// update a table
 async function update(req, res) {
   const updatedTable = {
     ...req.body.data,
     table_id: res.locals.table.table_id,
   };
+
+  const updatedReservation = {
+    ...res.locals.reservation,
+    reservation_id: res.locals.reservation.reservation_id,
+    status: "seated",
+  };
+  await reservationsService.updateStatus(updatedReservation);
+
   const data = await tablesService.update(updatedTable);
-  res.json({ data });
+  res.status(200).json({ data });
 }
 
 // read a table
@@ -33,23 +44,34 @@ async function read(req, res, next) {
 
 // delete a table
 async function destroy(req, res, next) {
-  const { table } = res.locals;
-  await tablesService.delete(table.table_id);
-  res.sendStatus(204);
+  const updatedTable = {
+    ...res.locals.table,
+    reservation_id: null,
+  };
+
+  const reservation_id = res.locals.table.reservation_id;
+  const reservation = await reservationsService.read(reservation_id);
+
+  const updatedReservation = {
+    ...reservation,
+    status: "finished",
+  };
+
+  const data = await tablesService.update(updatedTable);
+  await reservationsService.updateStatus(updatedReservation);
+  res.json({ data });
 }
 
-// validate if table is oppcupied
-function validateIfTableIsOccupied(req, res, next) {
-  const { table_id } = req.params;
-  const { table } = res.locals;
-  if (table.reservation_id == null) {
+function validateReservationIsSeated(req, res, next) {
+  const { status } = res.locals.reservation;
+
+  if (status === "seated") {
     return next({
       status: 400,
-      message: `${table_id} is not occupied`,
+      message: "This reservation is already seated",
     });
-  } else {
-    return next();
   }
+  next();
 }
 
 // validate whether the input has valid properties
@@ -161,6 +183,18 @@ function validateTableAvailability(req, res, next) {
   next();
 }
 
+function validateFinishedOccupiedTable(req, res, next) {
+  const { table } = res.locals;
+
+  if (!table.reservation_id) {
+    return next({
+      status: 400,
+      message: "Table is not occupied.",
+    });
+  }
+  next();
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -173,16 +207,17 @@ module.exports = {
   ],
   read: [asyncErrorBoundary(tableExists), asyncErrorBoundary(read)],
   update: [
-    asyncErrorBoundary(tableExists),
     hasData,
     asyncErrorBoundary(validateReservationIdExists),
+    asyncErrorBoundary(tableExists),
+    validateReservationIsSeated,
     validateTableCapacity,
     validateTableAvailability,
     asyncErrorBoundary(update),
   ],
   delete: [
-    asyncErrorBoundary(tableExists),
-    asyncErrorBoundary(validateIfTableIsOccupied),
+    tableExists,
+    validateFinishedOccupiedTable,
     asyncErrorBoundary(destroy),
   ],
 };

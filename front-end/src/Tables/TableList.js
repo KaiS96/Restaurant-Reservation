@@ -1,18 +1,6 @@
 import React from "react";
-import { finishReservation } from "../utils/api";
 
-function TableList({ tables, loadDashboard, loadTables }) {
-  const handleFinishReservation = async (table_id, reservation_id) => {
-    const confirm = window.confirm(
-      "Is this table ready to seat new guests?\nThis cannot be undone."
-    );
-    if (confirm) {
-      await finishReservation(table_id, reservation_id);
-      loadDashboard();
-      loadTables();
-    }
-  };
-
+function TableList({ tables, handleFinishReservation }) {
   return (
     <div>
       <table className="table">
