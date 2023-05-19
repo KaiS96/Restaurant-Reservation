@@ -191,7 +191,7 @@ function validateBookedReservation(req, res, next) {
 // validate reservation status
 function validateStatus(req, res, next) {
   const { status } = req.body.data;
-  const validStatus = ["booked", "seated", "finished"];
+  const validStatus = ["booked", "seated", "finished", "cancelled"];
   if (!validStatus.includes(status)) {
     return next({
       status: 400,
@@ -232,6 +232,17 @@ module.exports = {
     asyncErrorBoundary(reservationExists),
     validateStatus,
     validateFinishedReservation,
+    asyncErrorBoundary(update),
+  ],
+  updateReservation: [
+    asyncErrorBoundary(reservationExists),
+    hasData,
+    hasRequiredProperties,
+    validatePeopleIsANumber,
+    validateDateIsNotInThePast,
+    validateDateIsDate,
+    validateTimeIsTime,
+    validateBookedReservation,
     asyncErrorBoundary(update),
   ],
 };

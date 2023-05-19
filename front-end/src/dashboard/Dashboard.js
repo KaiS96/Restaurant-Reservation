@@ -96,12 +96,14 @@ function Dashboard({ date }) {
           Next Day
         </button>
       </div>
-      <ReservationList reservations={reservations} />
+      <ReservationList
+        reservations={reservations}
+        loadDashboard={loadDashboard}
+      />
       <TableList
         tables={tables}
         handleFinishReservation={handleFinishReservation}
       />
-      {/* <SearchReservation listReservations={listReservations} /> */}
     </main>
   );
 }

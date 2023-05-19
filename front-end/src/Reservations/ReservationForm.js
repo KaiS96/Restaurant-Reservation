@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { formatAsTime } from "../utils/date-time";
 
 function ReservationForm({
   onCancel,
@@ -8,8 +9,7 @@ function ReservationForm({
   initialState,
   error,
 }) {
-  const [reservationData, setReservationData] = useState(initialState);
-  // console.log(initialState)
+  const [reservationData, setReservationData] = useState({ ...initialState });
 
   const handleReservationUpdate = (event) => {
     if (event.target.name === "people") {
@@ -25,9 +25,15 @@ function ReservationForm({
     }
   };
 
+  useEffect(() => {
+    setReservationData(initialState);
+  }, [initialState]);
+
   const onSubmit = (event) => {
     event.preventDefault();
-    handleSubmit(reservationData);
+    const formattedTime = formatAsTime(reservationData.reservation_time);
+    handleSubmit({ ...reservationData, reservation_time: formattedTime });
+    // console.log(reservationData);
     if (!error) {
       setReservationData({ ...initialState });
     }
@@ -44,7 +50,7 @@ function ReservationForm({
             id="first_name"
             type="text"
             required={true}
-            value={reservationData.first_name}
+            value={reservationData.first_name || ""}
             placeholder="First Name"
             onChange={handleReservationUpdate}
           />
@@ -58,7 +64,7 @@ function ReservationForm({
             id="last_name"
             type="text"
             required={true}
-            value={reservationData.last_name}
+            value={reservationData.last_name || ""}
             placeholder="Last Name"
             onChange={handleReservationUpdate}
           />
@@ -73,7 +79,7 @@ function ReservationForm({
             type="text"
             maxLength="10"
             required={true}
-            value={reservationData.mobile_number}
+            value={reservationData.mobile_number || ""}
             placeholder="Mobile Number"
             onChange={handleReservationUpdate}
           />
@@ -87,7 +93,7 @@ function ReservationForm({
             id="reservation_date"
             type="date"
             required={true}
-            value={reservationData.reservation_date}
+            value={reservationData.reservation_date || ""}
             placeholder="Reservation Date"
             onChange={handleReservationUpdate}
           />
@@ -101,7 +107,7 @@ function ReservationForm({
             id="reservation_time"
             type="time"
             required={true}
-            value={reservationData.reservation_time}
+            value={reservationData.reservation_time || ""}
             placeholder="Reservation Time"
             onChange={handleReservationUpdate}
           />
@@ -115,7 +121,7 @@ function ReservationForm({
             id="people"
             type="number"
             required={true}
-            value={reservationData.people}
+            value={reservationData.people || ""}
             placeholder="Number of People"
             onChange={handleReservationUpdate}
           />
