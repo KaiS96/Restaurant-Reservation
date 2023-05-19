@@ -8,7 +8,7 @@ function TableForm({
   initialState,
   error,
 }) {
-  const [tableData, setTableData] = useState(initialState);
+  const [tableData, setTableData] = useState({ ...initialState });
   // console.log(initialState)
 
   const handleTableUpdate = (event) => {

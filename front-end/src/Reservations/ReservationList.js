@@ -1,6 +1,8 @@
 import React from "react";
 
-function ReservationList({ reservations }) {
+import CancelReservation from "./CancelReservation";
+
+function ReservationList({ reservations, loadDashboard }) {
   const reservationsMap = reservations.map((reservation, index) => (
     <tr key={index}>
       <td>{reservation.first_name}</td>
@@ -13,13 +15,28 @@ function ReservationList({ reservations }) {
         {reservation.status}
       </td>
       {reservation.status === "booked" ? (
-        <td>
-          <button type="button" className="btn btn-outline-secondary">
-            <a href={`/reservations/${reservation.reservation_id}/seat`}>
-              Seat
-            </a>
-          </button>
-        </td>
+        <React.Fragment>
+          <td>
+            <button type="button" className="btn btn-outline-secondary">
+              <a href={`/reservations/${reservation.reservation_id}/seat`}>
+                Seat
+              </a>
+            </button>
+          </td>
+          <td>
+            <button type="button" className="btn btn-outline-secondary">
+              <a href={`/reservations/${reservation.reservation_id}/edit`}>
+                Edit
+              </a>
+            </button>
+          </td>
+          <td>
+            <CancelReservation
+              reservation_id={reservation.reservation_id}
+              loadDashboard={loadDashboard}
+            />
+          </td>
+        </React.Fragment>
       ) : null}
     </tr>
   ));
