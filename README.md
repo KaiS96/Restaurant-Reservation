@@ -3,8 +3,8 @@
 Periodic Tables is a full-stack restaurant reservation management application designed for restaurant employees. Users can create, edit, and view reservations as well as manage table seating settings.
 
 ## Live Project
-- Frontend Deployment - 
-- Backend Deployment
+- Frontend Deployment - https://restaurant-reservation-frontend-djzx.onrender.com
+- Backend Deployment - https://restaurant-reservation-kjdb.onrender.com
 
 ## Technology Used
 #### Frontend:
