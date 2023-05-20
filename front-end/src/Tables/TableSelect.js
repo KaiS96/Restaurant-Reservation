@@ -42,7 +42,7 @@ function TableSelect() {
   const tableOptions = tables.map((table, index) => {
     return (
       <option key={table.table_id} value={table.table_id}>
-        Table: {table.table_name} - Capacity: {table.capacity}
+        {table.table_name} - {table.capacity}
       </option>
     );
   });

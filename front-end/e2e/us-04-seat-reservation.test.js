@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { setDefaultOptions } = require('expect-puppeteer');
+const { setDefaultOptions } = require("expect-puppeteer");
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -157,10 +157,13 @@ describe("US-04 - Seat reservation - E2E", () => {
         reservation_time: "13:45",
         people: 4,
       });
+      console.log("160");
 
       page = await browser.newPage();
+      console.log("163");
       page.on("console", onPageConsole);
       await page.setViewport({ width: 1920, height: 1080 });
+      console.log("166");
       await page.goto(
         `${baseURL}/reservations/${reservation.reservation_id}/seat`,
         {
@@ -168,62 +171,73 @@ describe("US-04 - Seat reservation - E2E", () => {
         }
       );
     });
+    console.log("174");
 
     test("seating reservation at table #1 makes the table occupied", async () => {
       await page.waitForSelector('option:not([value=""])');
+      console.log("178");
 
       await page.screenshot({
         path: ".screenshots/us-04-seat-reservation-start.png",
         fullPage: true,
       });
+      console.log("184");
 
       await selectOptionByText(page, "table_id", "#1 - 6");
+      console.log("187");
 
       await page.screenshot({
         path: ".screenshots/us-04-seat-reservation-submit-before.png",
         fullPage: true,
       });
+      console.log("193");
 
       await Promise.all([
         page.click("[type=submit]"),
         page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
+      console.log("195");
 
       await page.screenshot({
         path: ".screenshots/us-04-seat-reservation-submit-after.png",
         fullPage: true,
       });
+      console.log("205");
 
       expect(page.url()).toContain("/dashboard");
       expect(page).toMatch(/occupied/i);
     });
 
     test("cannot seat reservation at Bar #1", async () => {
-        await page.waitForSelector('option:not([value=""])');
+      await page.waitForSelector('option:not([value=""])');
+      console.log("213");
 
-        await page.screenshot({
-          path: ".screenshots/us-04-seat-capacity-reservation-start.png",
-          fullPage: true,
-        });
-
-        await selectOptionByText(page, "table_id", "Bar #1 - 1");
-
-        await page.screenshot({
-          path: ".screenshots/us-04-seat-capacity-reservation-submit-before.png",
-          fullPage: true,
-        });
-
-        await Promise.all([
-          page.click("[type=submit]"),
-        ]);
-
-        await page.screenshot({
-          path: ".screenshots/us-04-seat-capacity-reservation-submit-after.png",
-          fullPage: true,
-        });
-
-        expect(page.url()).toContain("/seat");
+      await page.screenshot({
+        path: ".screenshots/us-04-seat-capacity-reservation-start.png",
+        fullPage: true,
       });
+      console.log("219");
+
+      await selectOptionByText(page, "table_id", "Bar #1 - 1");
+      console.log("222");
+
+      await page.screenshot({
+        path: ".screenshots/us-04-seat-capacity-reservation-submit-before.png",
+        fullPage: true,
+      });
+      console.log("228");
+
+      await Promise.all([page.click("[type=submit]")]);
+      console.log("231");
+
+      await page.screenshot({
+        path: ".screenshots/us-04-seat-capacity-reservation-submit-after.png",
+        fullPage: true,
+      });
+      console.log("237");
+
+      expect(page.url()).toContain("/seat");
+    });
   });
 
   describe("/dashboard page", () => {
