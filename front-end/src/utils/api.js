@@ -68,6 +68,7 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 }
 
+// create a new reservation
 export async function createReservation(reservation, signal) {
   const url = `${API_BASE_URL}/reservations`;
   const options = {
@@ -79,6 +80,7 @@ export async function createReservation(reservation, signal) {
   return await fetchJson(url, options, reservation);
 }
 
+// read a reservation
 export async function readReservation(reservation_id, signal) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}`;
 
@@ -87,6 +89,7 @@ export async function readReservation(reservation_id, signal) {
     .then(formatReservationTime);
 }
 
+// edit/update a reservation
 export async function editReservation(updatedReservation, signal) {
   const url = new URL(
     `${API_BASE_URL}/reservations/${updatedReservation.reservation_id}`
@@ -102,6 +105,7 @@ export async function editReservation(updatedReservation, signal) {
   return await fetchJson(url, options);
 }
 
+// cancel a reservation
 export async function cancelReservation(reservation, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservation}/status`);
   const options = {
@@ -117,6 +121,7 @@ export async function cancelReservation(reservation, signal) {
   return await fetchJson(url, options);
 }
 
+// create a new table
 export async function createTable(table, signal) {
   const url = `${API_BASE_URL}/tables`;
   const options = {
@@ -128,11 +133,13 @@ export async function createTable(table, signal) {
   return await fetchJson(url, options, table);
 }
 
+// list a table
 export async function listTable(signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
   return await fetchJson(url, { headers, signal }, []);
 }
 
+// seat a reservation at a table
 export async function seatTable(reservation_id, table_id, signal) {
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
   const options = {
@@ -144,12 +151,14 @@ export async function seatTable(reservation_id, table_id, signal) {
   return await fetchJson(url, options);
 }
 
+// finish/delete a reservation once it is completed
 export async function finishReservation(table_id, signal) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = { method: "DELETE", signal };
   return await fetchJson(url, options);
 }
 
+// search a reservation by number
 export async function searchByNumber(mobile_number, signal) {
   const url = new URL(
     `${API_BASE_URL}/reservations?mobile_number=${mobile_number}`
