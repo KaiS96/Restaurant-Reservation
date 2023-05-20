@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import ReservationForm from "./ReservationForm";
 import { useHistory } from "react-router-dom";
+
+// import utility functions
 import { createReservation } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
 import { formatAsDate } from "../utils/date-time";
+
+// import components
+import ErrorAlert from "../layout/ErrorAlert";
+import ReservationForm from "./ReservationForm";
 
 const initialState = {
   first_name: "",
@@ -18,11 +22,6 @@ function CreateReservation() {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const history = useHistory();
-
-  //   const onCancel = (event) => {
-  //     event.preventDefault();
-  //     return history.goBack;
-  //   };
 
   const handleSubmit = async (newReservation) => {
     const abortController = new AbortController();

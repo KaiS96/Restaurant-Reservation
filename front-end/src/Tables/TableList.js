@@ -11,6 +11,8 @@ function TableList({ tables, handleFinishReservation }) {
       {table.reservation_id !== null ? (
         <td>
           <button
+            typ="button"
+            className="btn btn-outline-secondary btn-sm"
             data-table-id-finish={table.table_id}
             onClick={() =>
               handleFinishReservation(table.table_id, table.reservation_id)
@@ -24,8 +26,8 @@ function TableList({ tables, handleFinishReservation }) {
   ));
 
   return (
-    <div>
-      <table className="table">
+    <div className="table-responsive">
+      <table className="table table-sm w-75 text-center">
         <thead>
           <tr>
             <th scope="col">Table Name</th>

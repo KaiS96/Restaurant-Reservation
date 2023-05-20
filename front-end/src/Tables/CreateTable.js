@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+
+// import utility functions
+import { createTable } from "../utils/api";
+
+// import components
 import ErrorAlert from "../layout/ErrorAlert";
 import TableForm from "./TableForm";
-import { createTable } from "../utils/api";
-import { useHistory } from "react-router-dom";
 
 const initialState = {
   table_name: "",
@@ -14,11 +18,6 @@ function CreateTable() {
 
   const history = useHistory();
 
-  //   const onCancel = (event) => {
-  //     event.preventDefault();
-  //     return history.goBack;
-  //   };
-
   const handleSubmit = async (newTable) => {
     const abortController = new AbortController();
     try {
@@ -27,7 +26,7 @@ function CreateTable() {
     } catch (error) {
       setErrorMessage(error);
     }
-    return abortController;
+    return () => abortController;
   };
 
   return (

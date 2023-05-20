@@ -9,7 +9,6 @@ function TableForm({
   error,
 }) {
   const [tableData, setTableData] = useState({ ...initialState });
-  // console.log(initialState)
 
   const handleTableUpdate = (event) => {
     if (event.target.name === "capacity") {

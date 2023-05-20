@@ -11,24 +11,24 @@ function TableSelect() {
   const history = useHistory();
   const [tableId, setTableId] = useState();
   const [tables, setTables] = useState([]);
-  // const [reservation, setReservation] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
+    const abortController = new AbortController();
     async function loadTables() {
-      const response = await listTable();
+      const response = await listTable(abortController.signal);
       const tableFromAPI = response;
       setTables(() => tableFromAPI);
     }
     loadTables();
+    return () => abortController.abort();
   }, [reservation_id]);
 
   const handleChange = ({ target }) => {
     setTableId(target.value);
   };
 
-  const handleSubmit = async (event) => {
-    // event.prevent.default();
+  const handleSubmit = async () => {
     const abortController = new AbortController();
     try {
       await seatTable(reservation_id, tableId);
@@ -36,13 +36,13 @@ function TableSelect() {
     } catch (error) {
       setErrorMessage(error);
     }
-    return abortController;
+    return () => abortController;
   };
 
   const tableOptions = tables.map((table, index) => {
     return (
-      <option key={index} value={table.table_id}>
-        {table.table_name} - {table.capacity}
+      <option key={table.table_id} value={table.table_id}>
+        Table: {table.table_name} - Capacity: {table.capacity}
       </option>
     );
   });
@@ -52,8 +52,9 @@ function TableSelect() {
   return (
     <div>
       <ErrorAlert error={errorMessage} />
+      <h2>Select a Table:</h2>
       <select
-        className="table_id"
+        className="custom-select w-25 mb-2"
         required={true}
         name="table_id"
         aria-label="Default select example"
@@ -66,14 +67,14 @@ function TableSelect() {
       <div>
         <button
           type="button"
-          className="btn btn-secondary mr-2"
+          className="btn btn-outline-secondary btn-sm mr-2"
           onClick={history.goBack}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="btn btn-primary"
+          className="btn btn-outline-primary btn-sm"
           onClick={handleSubmit}
         >
           Submit

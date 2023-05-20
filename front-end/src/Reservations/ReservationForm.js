@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+
+// import utility functions
 import { formatAsTime } from "../utils/date-time";
 
 function ReservationForm({
@@ -33,7 +35,6 @@ function ReservationForm({
     event.preventDefault();
     const formattedTime = formatAsTime(reservationData.reservation_time);
     handleSubmit({ ...reservationData, reservation_time: formattedTime });
-    // console.log(reservationData);
     if (!error) {
       setReservationData({ ...initialState });
     }
@@ -130,12 +131,12 @@ function ReservationForm({
       <div>
         <button
           type="button"
-          className="btn btn-secondary mr-2"
+          className="btn btn-outline-danger mr-2"
           onClick={onCancel}
         >
           {cancelLabel}
         </button>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-outline-success">
           {submitLabel}
         </button>
       </div>

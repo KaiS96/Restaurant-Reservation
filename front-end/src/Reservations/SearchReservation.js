@@ -22,7 +22,7 @@ function SearchReservation() {
     } catch (error) {
       setError(error);
     }
-    return abortController;
+    return () => abortController.abort();
   };
 
   const handleChange = ({ target }) => {
@@ -34,7 +34,7 @@ function SearchReservation() {
       <form onSubmit={handleSubmit}>
         <h2>Find a Reservation</h2>
         <ErrorAlert error={error} />
-        <div className="input-group mb-3">
+        <div className="input-group mb-3 w-50">
           <input
             name="mobile_number"
             type="text"
@@ -64,7 +64,7 @@ function SearchReservation() {
           </div>
         ) : (
           <div
-            className="row d-md-flex mb-3 alert alert-dark text-center"
+            className="row d-md-flex mb-3 alert alert-dark text-center w-50"
             role="alert"
           >
             No reservations found
