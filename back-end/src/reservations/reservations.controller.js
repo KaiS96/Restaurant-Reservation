@@ -162,7 +162,7 @@ function validateTimeIsTime(req, res, next) {
 function validateDateIsNotInThePast(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   let day = new Date(`${reservation_date} ${reservation_time}`);
-  if (day < Date.now()) {
+  if (day < new Date()) {
     return next({
       status: 400,
       message: `The reservation_date is in the past. Only future reservations are allowed.`,
