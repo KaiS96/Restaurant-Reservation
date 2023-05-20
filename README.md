@@ -3,44 +3,62 @@
 Periodic Tables is a full-stack restaurant reservation management application designed for restaurant employees. Users can create, edit, and view reservations as well as manage table seating settings.
 
 ## Live Project
+
 - Frontend Deployment - [Deployed Here](https://restaurant-reservation-frontend-djzx.onrender.com)
 - Backend Deployment - [Deployed Here](https://restaurant-reservation-kjdb.onrender.com) (Use routes as listed below)
 
 ## Technology Used
+
 #### Frontend:
- - JavaScript, React, React Router, HTML, CSS, Bootstrap
-  
+
+- JavaScript, React, React Router, HTML, CSS, Bootstrap
+
 #### Backend:
- - Node.js, Express, Knex, PostgreSQL
+
+- Node.js, Express, Knex, PostgreSQL
 
 ## Frontend Overview:
+
 ### Dahboard View:
-![Dashboard View](/dashboard.png "Dashboard View")
+
+![Dashboard View](./screenshots/Dashboard.png "Dashboard View")
+
 ### Create a new reservation:
-![Create Reservation](<img width="1440" alt="Create Reservation" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/d08207ca-6293-4dcb-b823-c335ddf6a638"> "Create Reservation")
+
+![Create Reservation](./screenshots/Create%20Reservation.png "Create Reservation")
+
 ### Edit a reservation:
-![Edit Reservation](<img width="1440" alt="Edit a Reservation" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/ff5422ac-c322-4395-8540-a9ea6a2d7589"> "Edit Reservation")
+
+![Edit Reservation](./screenshots/Edit%20Reservation.png "Edit Reservation")
+
 ### Create a new table:
-![Create Table](<img width="1440" alt="Create a Table" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/611c87f3-7958-44ad-8a0e-03547606ec29"> "Create Table")
+
+![Create Table](./screenshots/Create%20Table.png "Create Table")
+
 ### Seat a reservation:
-![Seat Reservation](<img width="1440" alt="Select a Table" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/b01823cf-39f5-4aec-ad01-afd82cbb9b1e"> "Seat Reservation")
+
+![Seat Reservation](./screenshots/Select%20Table.png "Seat Reservation")
+
 ### Find a reservation:
-![Find Reservation](<img width="1440" alt="Find Reservation" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/77526437-d710-4fe6-8ea0-d223d73c482c"> "Find Reservation")
+
+![Find Reservation](./screenshots/Find%20Reservation.png "Find Reservation")
+
 ### Finish a reservation:
-![Finish Reservation](<img width="1243" alt="Finish a table" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/97fb5739-4fbc-48bc-acda-ad11e5dee711"> "Finish Reservation")
+
+![Finish Reservation](./screenshots/Find%20Reservation.png "Finish Reservation")
 
 ## Backend Overview:
 
 The API allows for the following routes:
 
-Method | Route | Description
- -|-|-
-| `GET` | `/reservations` | List all reservations for current date
-| `GET` | `/reservations?date=YYYY-MM-DD` | List all reservations for specified date
-| `POST` | `/reservations` | Create new reservation
-| `GET` | `/reservations/:reservation_id` | List reservation by ID
-| `PUT` | `/reservations/:reservation_id` | Update reservation
-| `PUT` | `/reservations/:reservation_id/status` | Update reservation status
+| Method | Route                                  | Description                              |
+| ------ | -------------------------------------- | ---------------------------------------- |
+| `GET`  | `/reservations`                        | List all reservations for current date   |
+| `GET`  | `/reservations?date=YYYY-MM-DD`        | List all reservations for specified date |
+| `POST` | `/reservations`                        | Create new reservation                   |
+| `GET`  | `/reservations/:reservation_id`        | List reservation by ID                   |
+| `PUT`  | `/reservations/:reservation_id`        | Update reservation                       |
+| `PUT`  | `/reservations/:reservation_id/status` | Update reservation status                |
 
 | `GET` | `/tables` | List all tables
 | `POST` | `/tables` | Create new table
