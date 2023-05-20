@@ -15,7 +15,7 @@ Periodic Tables is a full-stack restaurant reservation management application de
 
 ## Frontend Overview:
 ### Dahboard View:
-![Dashboard View](/<img width="1440" alt="Dashboard" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/73e33e9c-6a5e-4209-9244-9e63d7f01fc3"> "Dashboard View")
+![Dashboard View](/dashboard.png "Dashboard View")
 ### Create a new reservation:
 ![Create Reservation](<img width="1440" alt="Create Reservation" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/d08207ca-6293-4dcb-b823-c335ddf6a638"> "Create Reservation")
 ### Edit a reservation:
