@@ -15,7 +15,7 @@ Periodic Tables is a full-stack restaurant reservation management application de
 
 ## Frontend Overview:
 ### Dahboard View:
-![Dashboard View](<img width="1440" alt="Dashboard" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/b682ed44-41b3-4a29-a88d-966006962c21"> "Dashboard View")
+![Dashboard View](/<img width="1440" alt="Dashboard" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/73e33e9c-6a5e-4209-9244-9e63d7f01fc3"> "Dashboard View")
 ### Create a new reservation:
 ![Create Reservation](<img width="1440" alt="Create Reservation" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/d08207ca-6293-4dcb-b823-c335ddf6a638"> "Create Reservation")
 ### Edit a reservation:
@@ -25,7 +25,7 @@ Periodic Tables is a full-stack restaurant reservation management application de
 ### Seat a reservation:
 ![Seat Reservation](<img width="1440" alt="Select a Table" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/b01823cf-39f5-4aec-ad01-afd82cbb9b1e"> "Seat Reservation")
 ### Find a reservation:
-![Find Reservation](<img width="1440" alt="Find Reservation" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/77526437-d710-4fe6-8ea0-d223d73c482c"> "Find Reservation)
+![Find Reservation](<img width="1440" alt="Find Reservation" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/77526437-d710-4fe6-8ea0-d223d73c482c"> "Find Reservation")
 ### Finish a reservation:
 ![Finish Reservation](<img width="1243" alt="Finish a table" src="https://github.com/KaiS96/starter-restaurant-reservation/assets/119773913/97fb5739-4fbc-48bc-acda-ad11e5dee711"> "Finish Reservation")
 
