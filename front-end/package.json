@@ -42,7 +42,7 @@
     "test:start:backend": "npm run test:start --prefix ./../back-end",
     "test:start:frontend": "npx cross-env BROWSER=none NODE_ENV=test react-scripts start",
     "test:unit": "react-scripts test",
-    "seed": "node ./back-end/src/db/seeds/01-tables.js"
+    "seed": "node /back-end/src/db/seeds/01-tables.js"
   },
   "eslintConfig": {
     "extends": [
